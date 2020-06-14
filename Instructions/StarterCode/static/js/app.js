@@ -1,11 +1,44 @@
-var dropDown = d3.select("#selDataset")
+// Select a global variable 
+var globalJson = null;
+d3.json("samples.json").then((data) => {
+    console.log(data); 
+});
 
-function top10bar (ID){
-    d3.json("samples.json").then((data) => {
-        var samples = data.samples
-        // console.log(samples);
-        var idData = samples.filter(sample => parseInt(sample.id)=== parseInt(ID)); 
-        // console.log(idData)
+function init() {
+    d3.json("samples.json").then((data) => { 
+        
+        // set the data to a global so we don't have to parse again
+        globalJson = data;
+
+        var names  = globalJson.names; 
+        
+        names.forEach((sample) => {
+            
+            d3.select("#selDataset")
+              .append("option")
+              .text(sample) 
+          });
+
+          var selectedName = d3.select("#selDataset").node().value
+          // update the first id on load
+          getInfo(selectedName);
+          graphUpdate(selectedName);
+    });  
+}; 
+
+function getInfo(ID) {  
+        var metadata = globalJson.metadata;
+        var demoInfo = d3.select("#sample-metadata");
+        var results = metadata.filter(d => parseInt(d.id) === parseInt(ID))[0];
+        console.log(results);
+        demoInfo.html("");
+        Object.entries(results).forEach(([key, value]) => {
+            demoInfo.append("h6").text(`${key.toUpperCase()}: ${value}`);
+      }); 
+
+        var samples = globalJson.samples;
+        var idData = samples.filter(sample => parseInt(sample.id)=== parseInt(ID));
+        console.log(idData);
         var otu_ID = idData[0].otu_ids;
         //console.log(otuIDs);
         var otu_ids = idData[0].otu_ids.slice(0,10); 
@@ -37,108 +70,13 @@ function top10bar (ID){
         };
         
         Plotly.newPlot("bar", data, layout);
-
-        var trace2 = {
-            x: otu_ID,
-            y: sample_values,
-            text: otuLabels,
-            mode: 'markers',
-            marker: {
-                size: sample_values,
-                color: otu_ID
-            }
-        };
-
-        var data2 = [trace2]; 
-
-        var layout2 = {
-            title: 'Bubble Chart',
-            height: 600,
-            width: 1000
-        };
-        
-        Plotly.newPlot('bubble', data2, layout2);
-    });
-    
-};
-
-function getInfo(ID){
-    d3.json("samples.json").then((data) => {
-        var demoInfo = d3.select("#sample-metadata");
-        var metadata = data.metadata;
-        var results = metadata.filter(d => parseInt(d.id) === parseInt(ID))[0];
-        console.log(results);
-        demoInfo.html("");
-        Object.entries(results).forEach(([key, value]) => {
-            demoInfo.append("h6").text(`${key.toUpperCase()}: ${value}`);
-        });
-
-        var dataGauge = [
-            {
-                domain: {x:[0,1], y: [0,1]},
-                value: results.wfreq,
-                title: {text: `Weekly washing frequency`},
-                type: "indicator", 
-                mode: "gauge+number",
-                gauge: {axis: {range: [null, 10] },
-                            steps: [
-                                {range: [0,2], color: "FloralWhite" },
-                                {range: [2,4], color: "cornsilk"},
-                                {range: [4,6], color: "LightPink"},
-                                {range: [6,8], color: "PaleVioletRed"},
-                                {range: [8,10], color: "MediumVioletRed"}
-                            ]}
-            }
-        ];
-
-        var layoutGauge = {
-            width: 700,
-            height: 700
-        };
-        
-        Plotly.newPlot('gauge', dataGauge, layoutGauge);
-    });
-};
-
-function init() {
-    d3.json("samples.json").then((data) => {
-        var names = data.names; 
-        console.log(names);
-        names.forEach((sample) => {
-            dropDown
-              .append("option")
-              .text(sample)
-              .property("value", sample);
-          });
-    });
-    
-    top10bar(940);
-    getInfo(940);
-
-};
+}
 
 function optionChanged(change){
-    top10bar(change);
     getInfo(change);
-    
-}; 
-
-
+};
 
 init()
-
-function optionChanged(change){
-    top10bar(change);
-    getInfo(change);
-    
-}; 
-
-
-
-init()
-
-
-
 
 
 
