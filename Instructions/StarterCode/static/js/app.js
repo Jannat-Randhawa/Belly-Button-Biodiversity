@@ -1,7 +1,5 @@
 var dropDown = d3.select("#selDataset")
 
-});
-
 function top10bar (ID){
     d3.json("samples.json").then((data) => {
         var samples = data.samples
@@ -22,7 +20,8 @@ function top10bar (ID){
         console.log(topSamples);
         var topSamplesrev = topSamples.reverse();
         console.log(topSamplesrev);
-
+        // var wfreq = data.metadata.map(wash => (wash.wfreq));
+        // console.log(wfreq);
 
         var trace = {
             x: topSamplesrev ,
@@ -59,7 +58,7 @@ function top10bar (ID){
             width: 1000
         };
         
-        Plotly.newPlot('bubble', data2, layout2);   
+        Plotly.newPlot('bubble', data2, layout2);
     });
     
 };
@@ -74,6 +73,31 @@ function getInfo(ID){
         Object.entries(results).forEach(([key, value]) => {
             demoInfo.append("h6").text(`${key.toUpperCase()}: ${value}`);
         });
+
+        var dataGauge = [
+            {
+                domain: {x:[0,1], y: [0,1]},
+                value: results.wfreq,
+                title: {text: `Weekly washing frequency`},
+                type: "indicator", 
+                mode: "gauge+number",
+                gauge: {axis: {range: [null, 10] },
+                            steps: [
+                                {range: [0,2], color: "FloralWhite" },
+                                {range: [2,4], color: "cornsilk"},
+                                {range: [4,6], color: "LightPink"},
+                                {range: [6,8], color: "PaleVioletRed"},
+                                {range: [8,10], color: "MediumVioletRed"}
+                            ]}
+            }
+        ];
+
+        var layoutGauge = {
+            width: 700,
+            height: 700
+        };
+        
+        Plotly.newPlot('gauge', dataGauge, layoutGauge);
     });
 };
 
