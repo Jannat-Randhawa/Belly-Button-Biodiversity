@@ -1,20 +1,22 @@
-var dropDown = d3.select("#selDataset").on("change", optionChanged); 
+var dropDown = d3.select("#selDataset")
 
 
 function top10bar (ID){
     d3.json("samples.json").then((data) => {
         var samples = data.samples
         // console.log(samples);
-        var idData = samples.filter(sample => parseInt(sample.id)=== ID); 
+        var idData = samples.filter(sample => parseInt(sample.id)=== parseInt(ID)); 
         // console.log(idData)
+        var otuIDs = idData[0].otu_ids;
+        console.log(otuIDs);
         var idOtu = idData[0].otu_ids.slice(0,10); 
         // console.log(idOtu)
-        var idOturev = idOtu.reverse();
-        console.log(idOturev);
-        var labels = idOtu.map(i => "OTU_" + i);
-        console.log(labels);
+        var IDotu = idOtu.map(i => "OTU_" + i);
+        console.log(IDotu);
         var otuLabels = idData[0].otu_labels.slice(0,10);
-        console.log(otuLabels)
+        console.log(otuLabels);
+        var sampleValues = idData[0].sample_values;
+        console.log(sampleValues);
         var topSamples = idData[0].sample_values.slice(0,10);
         console.log(topSamples);
         var topSamplesrev = topSamples.reverse();
@@ -22,7 +24,7 @@ function top10bar (ID){
 
         var trace = {
             x: topSamplesrev ,
-            y: labels,
+            y: IDotu,
             text: otuLabels,
             type: "bar",
             orientation: "h"
@@ -35,8 +37,34 @@ function top10bar (ID){
         };
         
         Plotly.newPlot("bar", data, layout);
-    });
 
+        var trace2 = {
+            x: otuIDs,
+            y: sampleValues,
+            text: otuLabels,
+            mode: 'markers',
+            marker: {
+                size: sampleValues,
+                color: otuIDs
+            }
+        };
+
+        var data2 = [trace2]; 
+
+        var layout2 = {
+            title: 'Bubble Chart',
+            height: 600,
+            width: 1000
+        };
+        
+        Plotly.newPlot('bubble', data2, layout2); 
+
+        d3.json("samples.json").then((data) => {
+            console.log(data)});
+
+            
+    });
+    
 };
 
 function init() {
@@ -50,14 +78,18 @@ function init() {
               .property("value", sample);
           });
     });
-    top10bar(940)
+    top10bar(940);
+    getInfo(940);
 
 };
 
 function optionChanged(change){
-    top10bar(change)
+    top10bar(change);
+    getInfo(change);
     
 }; 
+
+
 
 init()
 
