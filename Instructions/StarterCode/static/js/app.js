@@ -1,5 +1,7 @@
 var dropDown = d3.select("#selDataset")
-
+d3.json("samples.json").then((data) => {
+    console.log(data);
+});
 
 function top10bar (ID){
     d3.json("samples.json").then((data) => {
@@ -21,6 +23,7 @@ function top10bar (ID){
         console.log(topSamples);
         var topSamplesrev = topSamples.reverse();
         console.log(topSamplesrev);
+        
 
         var trace = {
             x: topSamplesrev ,
@@ -57,14 +60,22 @@ function top10bar (ID){
             width: 1000
         };
         
-        Plotly.newPlot('bubble', data2, layout2); 
-
-        d3.json("samples.json").then((data) => {
-            console.log(data)});
-
-            
+        Plotly.newPlot('bubble', data2, layout2);   
     });
     
+};
+
+function getInfo(ID){
+    d3.json("samples.json").then((data) => {
+        var demoInfo = d3.select("#sample-metadata");
+        var metadata = data.metadata;
+        var results = metadata.filter(d => parseInt(d.id) === parseInt(ID))[0];
+        console.log(results);
+        demoInfo.html("");
+        Object.entries(results).forEach(([key, value]) => {
+            demoInfo.append("h6").text(`${key.toUpperCase()}: ${value}`);
+        });
+    });
 };
 
 function init() {
@@ -78,6 +89,7 @@ function init() {
               .property("value", sample);
           });
     });
+    
     top10bar(940);
     getInfo(940);
 
