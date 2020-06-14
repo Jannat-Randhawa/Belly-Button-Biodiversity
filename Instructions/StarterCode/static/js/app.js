@@ -1,6 +1,5 @@
 var dropDown = d3.select("#selDataset")
-d3.json("samples.json").then((data) => {
-    console.log(data);
+
 });
 
 function top10bar (ID){
@@ -23,7 +22,7 @@ function top10bar (ID){
         console.log(topSamples);
         var topSamplesrev = topSamples.reverse();
         console.log(topSamplesrev);
-        
+
 
         var trace = {
             x: topSamplesrev ,
