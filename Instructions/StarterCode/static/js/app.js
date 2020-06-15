@@ -57,7 +57,7 @@ function getInfo(ID) {
         var topSamples = idData[0].sample_values.slice(0,10).reverse();
         // console.log(topSamples);
     
-
+      // BAR GRAPHS
         var trace = {
             x: topSamples ,
             y: otu_ids,
@@ -69,13 +69,40 @@ function getInfo(ID) {
         var data = [trace];
         
         var layout = {
-            title: "Top Ten OTU ID"
+            title: "Top Ten OTU ID",
+            margin: {
+                l: 130,
+                r: 85,
+                t: 30,
+                b: 30
+              }
         };
         
         Plotly.newPlot("bar", data, layout);
-};
-        
 
+        // BUBBLE GRAPHS
+        var trace2  = {
+            x: otu_ID, 
+            y: sample_values, 
+            text: otuLabels, 
+            mode: 'markers', 
+            marker: {
+                size: sample_values,
+                color: otu_ID
+            }
+        }; 
+
+        var data2 = [trace2]; 
+
+        var layout2 = {
+            height: 700, 
+            width: 1000, 
+        }
+
+        Plotly.newPlot('bubble', data2, layout2);
+};
+
+        
 
 function optionChanged(change){
     getInfo(change);
