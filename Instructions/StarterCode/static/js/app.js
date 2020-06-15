@@ -4,6 +4,7 @@ d3.json("samples.json").then((data) => {
     console.log(data); 
 });
 
+// create function for redering the data 
 function init() {
     d3.json("samples.json").then((data) => { 
         
