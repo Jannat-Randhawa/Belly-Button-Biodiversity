@@ -1,15 +1,15 @@
 // Select a global variable 
 var globalJson = null;
 
-// create function for redering the data 
+// create function for rendering the data 
 function init() {
     d3.json("samples.json").then((data) => { 
         
         // set the data to a global so we don't have to parse again
         globalJson = data;
-
+        // get names for the ID of the dropdown menu. 
         var names  = globalJson.names; 
-        
+        // append the names to the dropdown 
         names.forEach((sample) => {
             
             d3.select("#selDataset")
@@ -24,11 +24,16 @@ function init() {
 }; 
 
 function getInfo(ID) {  
+        // get metadata from the filter data 
         var metadata = globalJson.metadata;
+        // select panel to append data into
         var demoInfo = d3.select("#sample-metadata");
+        // filter metadata by id 
         var results = metadata.filter(d => parseInt(d.id) === parseInt(ID))[0];
         console.log(results);
+        // refresh panel for new results 
         demoInfo.html("");
+        // appending data for the id to the panel. 
         Object.entries(results).forEach(([key, value]) => {
             demoInfo.append("h6").text(`${key.toUpperCase()}: ${value}`);
       }); 
