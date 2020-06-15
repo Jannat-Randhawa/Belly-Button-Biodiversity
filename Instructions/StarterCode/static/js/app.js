@@ -96,8 +96,10 @@ function getInfo(ID) {
             orientation: "h"
         };
         
+        // create data for the bar graph. 
         var data = [trace];
         
+        // Select layout
         var layout = {
             title: "Top Ten OTU ID",
             margin: {
