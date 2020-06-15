@@ -22,7 +22,6 @@ function init() {
           var selectedName = d3.select("#selDataset").node().value
           // update the first id on load
           getInfo(selectedName);
-          graphUpdate(selectedName);
     });  
 }; 
 
@@ -35,6 +34,32 @@ function getInfo(ID) {
         Object.entries(results).forEach(([key, value]) => {
             demoInfo.append("h6").text(`${key.toUpperCase()}: ${value}`);
       }); 
+
+        // Build Gauge
+        var dataGauge = [
+            {
+                domain: {x:[0,1], y: [0,1]},
+                value: results.wfreq,
+                title: {text: `Weekly washing frequency`},
+                type: "indicator", 
+                mode: "gauge+number",
+                gauge: {axis: {range: [null, 10] },
+                            steps: [
+                                {range: [0,2], color: "White" },
+                                {range: [2,4], color: "cornsilk"},
+                                {range: [4,6], color: "LightPink"},
+                                {range: [6,8], color: "PaleVioletRed"},
+                                {range: [8,10], color: "MediumVioletRed"}
+                            ]}
+            }
+        ];
+
+        var layoutGauge = {
+            width: 700,
+            height: 700
+        };
+        
+        Plotly.newPlot('gauge', dataGauge, layoutGauge);
 
         var samples = globalJson.samples;
         var idData = samples.filter(sample => parseInt(sample.id)=== parseInt(ID));
@@ -97,7 +122,7 @@ function getInfo(ID) {
         var layout2 = {
             height: 700, 
             width: 1000, 
-        }
+        };
 
         Plotly.newPlot('bubble', data2, layout2);
 };
