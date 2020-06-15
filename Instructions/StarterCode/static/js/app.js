@@ -38,7 +38,7 @@ function getInfo(ID) {
             demoInfo.append("h6").text(`${key.toUpperCase()}: ${value}`);
       }); 
 
-        // Build Gauge
+        // Build Gauge chart
         var dataGauge = [
             {
                 domain: {x:[0,1], y: [0,1]},
@@ -65,6 +65,7 @@ function getInfo(ID) {
         Plotly.newPlot('gauge', dataGauge, layoutGauge);
 
         var samples = globalJson.samples;
+        // filter data by ID
         var idData = samples.filter(sample => parseInt(sample.id)=== parseInt(ID));
         console.log(idData);
         // Make variables for the graph.
@@ -86,6 +87,7 @@ function getInfo(ID) {
         // console.log(topSamples);
     
       // BAR GRAPHS
+      // create trace for the plots.
         var trace = {
             x: topSamples ,
             y: otu_ids,
@@ -99,8 +101,8 @@ function getInfo(ID) {
         var layout = {
             title: "Top Ten OTU ID",
             margin: {
-                l: 130,
-                r: 85,
+                l: 125,
+                r: 65,
                 t: 30,
                 b: 30
               }
