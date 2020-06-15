@@ -113,6 +113,7 @@ function getInfo(ID) {
         Plotly.newPlot("bar", data, layout);
 
         // BUBBLE GRAPHS
+        // create trace for the plots.
         var trace2  = {
             x: otu_ID, 
             y: sample_values, 
@@ -135,7 +136,7 @@ function getInfo(ID) {
 };
 
         
-
+// create a change function to handle change event. 
 function optionChanged(change){
     getInfo(change);
 };
