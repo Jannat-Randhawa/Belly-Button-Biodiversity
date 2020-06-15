@@ -39,25 +39,28 @@ function getInfo(ID) {
         var samples = globalJson.samples;
         var idData = samples.filter(sample => parseInt(sample.id)=== parseInt(ID));
         console.log(idData);
+        // Make variables for the graph.
         var otu_ID = idData[0].otu_ids;
         //console.log(otuIDs);
-        var otu_ids = idData[0].otu_ids.slice(0,10); 
+        
+        // select top ten otu_ids
+        var otu_ids = idData[0].otu_ids.slice(0,10).map(i => "OTU_" + i); 
         // console.log(idOtu)
-        var otu_idsLabels = otu_ids.map(i => "OTU_" + i);
-        // console.log(otu_idsLabels);
+
+        //select top ten otu_labels 
         var otuLabels = idData[0].otu_labels.slice(0,10);
         // console.log(otuLabels);
+       
+       // Select top 10 sample values 
         var sample_values = idData[0].sample_values;
         // console.log(sample_values);
-        var topSamples = idData[0].sample_values.slice(0,10);
+        var topSamples = idData[0].sample_values.slice(0,10).reverse();
         // console.log(topSamples);
-        var topSamplesrev = topSamples.reverse();
-        // console.log(topSamplesrev);
     
 
         var trace = {
-            x: topSamplesrev ,
-            y: otu_idsLabels,
+            x: topSamples ,
+            y: otu_ids,
             text: otuLabels,
             type: "bar",
             orientation: "h"
@@ -70,7 +73,9 @@ function getInfo(ID) {
         };
         
         Plotly.newPlot("bar", data, layout);
-}
+};
+        
+
 
 function optionChanged(change){
     getInfo(change);
