@@ -1,8 +1,5 @@
 // Select a global variable 
 var globalJson = null;
-d3.json("samples.json").then((data) => {
-    console.log(data); 
-});
 
 // create function for redering the data 
 function init() {
